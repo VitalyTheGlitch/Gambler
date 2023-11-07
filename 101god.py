@@ -1,7 +1,7 @@
 import os
 import random
 import time
-from colorama import Fore, Back, init
+from colorama import Back, Fore, init
 import l0lonline
 
 init(autoreset=True)

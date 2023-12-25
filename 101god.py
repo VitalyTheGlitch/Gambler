@@ -1,7 +1,7 @@
 import os
 import random
 import time
-from colorama import Back, Fore, init
+from colorama import Back, Fore, Style, init
 import l0lonline
 
 init(autoreset=True)
@@ -14,7 +14,7 @@ def clear():
 def banner():
     clear()
 
-    print(f'{Fore.GREEN}101GOD\n')
+    print(f'{Style.BRIGHT}{Fore.GREEN}101GOD\n')
 
 
 def get_card(card_id):
@@ -105,15 +105,15 @@ def start(l0l, p, position, players):
 
     banner()
 
-    print(f'{Fore.GREEN}Game started\n')
-    print(f'{Fore.GREEN}YOU', 'are marked in', f'{Fore.GREEN}GREEN\n')
-    print(f'{Fore.CYAN}(To surrender, press CTRL+C)\n')
+    print(f'{Style.BRIGHT}{Fore.GREEN}Game started\n')
+    print(f'{Style.BRIGHT}{Fore.GREEN}YOU', 'are marked in', f'{Fore.GREEN}GREEN\n')
+    print(f'{Style.BRIGHT}{Fore.CYAN}(To surrender, press CTRL+C)\n')
 
     while True:
         data = l0l.listen()
 
         if data['command'] == 'err':
-            print(f'\n{Back.RED}Error:', data['code'])
+            print(f'\n{Style.BRIGHT}{Back.RED}Error:', data['code'])
 
             data = l0l.listen()
 
@@ -128,7 +128,7 @@ def start(l0l, p, position, players):
             cards = []
             cards_n = []
 
-            print(f'\n{Back.CYAN}Your cards:', end=' ')
+            print(f'\n{Style.BRIGHT}{Back.CYAN}Your cards:', end=' ')
 
             for card in range(len(data['cards'])):
                 if get_card(data['cards'][card]) not in cards:
@@ -142,14 +142,14 @@ def start(l0l, p, position, players):
         elif data['command'] == 'turn':
             table = []
 
-            print(f'\n{Back.CYAN}Cards on the table:', end=' ')
+            print(f'\n{Style.BRIGHT}{Back.CYAN}Cards on the table:', end=' ')
 
             for card in range(len(data['table'])):
                 table.append(get_card(data['table'][card]))
 
                 print(get_card(data['table'][card]), end=' ')
 
-            print(f'\n{Back.CYAN}Cards in the deck:', data['deck'])
+            print(f'\n{Style.BRIGHT}{Back.CYAN}Cards in the deck:', data['deck'])
 
         elif data['command'] == 'mode':
             if data[str(position)] >= 6:
@@ -166,11 +166,11 @@ def start(l0l, p, position, players):
         elif data['command'] == 'hs':
             points = data['s']
 
-            print(f'\n{Back.CYAN}Your score:', data['s'])
+            print(f'\n{Style.BRIGHT}{Back.CYAN}Your score:', data['s'])
 
         elif data['command'] == 't':
             if data['id'] == position:
-                print(f'\n{Fore.GREEN}Player {data["id"]}({players[data["id"]]}) played the {get_card(data["c"])}')
+                print(f'\n{Style.BRIGHT}{Fore.GREEN}Player {data["id"]}({players[data["id"]]}) played the {get_card(data["c"])}')
 
                 if start:
                     if data['c'] in [40, 41, 42, 43]:
@@ -184,7 +184,7 @@ def start(l0l, p, position, players):
                     pass
 
             else:
-                print(f'\nPlayer {data["id"]}({players[data["id"]]}) played the {get_card(data["c"])}')
+                print(f'\n{Style.BRIGHT}Player {data["id"]}({players[data["id"]]}) played the {get_card(data["c"])}')
 
             start = False
 
@@ -218,13 +218,13 @@ def start(l0l, p, position, players):
             surrender = data['id']
 
         elif data['command'] == 'shuffle':
-            print(f'\n{Back.CYAN}Deck shuffled')
+            print(f'\n{Style.BRIGHT}{Back.CYAN}Deck shuffled')
 
         elif data['command'] == 'p_off':
-            print(f'\nPlayer {data["id"]} went offline')
+            print(f'\n{Style.BRIGHT}Player {data["id"]} went offline')
 
         elif data['command'] == 'p_on':
-            print(f'\nPlayer {data["id"]} is back')
+            print(f'\n{Style.BRIGHT}Player {data["id"]} is back')
 
         elif data['command'] == 'game_over':
             over = []
@@ -247,28 +247,28 @@ def start(l0l, p, position, players):
                     you = i + 1
 
             if winner == position:
-                print(f'\n{Back.GREEN}Victory')
+                print(f'\n{Style.BRIGHT}{Back.GREEN}Victory')
 
             elif winner > -1:
-                print(f'\n{Back.RED}Game over. The winner is {winner}')
+                print(f'\n{Style.BRIGHT}{Back.RED}Game over. The winner is {winner}')
 
                 if data['win'][str(position)]['s101']:
-                    print(f'\n{Back.GREEN}You took {you} place, finishing the game with 101 points')
+                    print(f'\n{Style.BRIGHT}{Back.GREEN}You took {you} place, finishing the game with 101 points')
 
                 else:
                     if p == 2 or (p == 3 and you == 3) or (p == 4 and you > 2) or (p == 5 and you > 2) or (p == 6 and you > 3):
-                        print(f'\n{Back.RED}You took {you} place')
+                        print(f'\n{Style.BRIGHT}{Back.RED}You took {you} place')
 
                     else:
-                        print(f'\n{Back.GREEN}You took {you} place')
+                        print(f'\n{Style.BRIGHT}{Back.GREEN}You took {you} place')
 
             elif surrender:
-                print(f'\n{Back.GREEN}Victory\n\nPlayer {surrender} surrendered')
+                print(f'\n{Style.BRIGHT}{Back.GREEN}Victory\n\nPlayer {surrender} surrendered')
 
             else:
-                print(f'\n{Back.RED}The game is over as a result of an unknown outcome')
+                print(f'\n{Style.BRIGHT}{Back.RED}The game is over as a result of an unknown outcome')
 
-            choice = input(f'\n{Fore.CYAN}Continue? (Y/n): ')
+            choice = input(f'{Style.BRIGHT}\n{Fore.CYAN}Continue? (Y/n): ')
 
             break
 
@@ -361,7 +361,7 @@ def start(l0l, p, position, players):
                 elif available[z] in [24, 25, 26, 27]:
                     eight_suit = get_card(available[z])[0]
 
-                print(f'\n{Fore.GREEN}Player {position}({players[position]}) played the {get_card(available[z])}')
+                print(f'\n{Style.BRIGHT}{Fore.GREEN}Player {position}({players[position]}) played the {get_card(available[z])}')
 
                 try:
                     cards.remove(get_card(available[z]))
@@ -378,19 +378,19 @@ def start(l0l, p, position, players):
                     if takes == 4:
                         l0l.tpass()
 
-                        print(f'\n{Fore.GREEN}Player {position}({players[position]}) missed a turn')
+                        print(f'\n{Style.BRIGHT}{Fore.GREEN}Player {position}({players[position]}) missed a turn')
 
                         takes = 0
 
                     else:
                         l0l.take()
 
-                        print(f'\n{Fore.GREEN}Player {position}({players[position]}) took')
+                        print(f'\n{Style.BRIGHT}{Fore.GREEN}Player {position}({players[position]}) took')
 
                 elif six_or_seven:
                     l0l.take()
 
-                    print(f'\n{Fore.GREEN}Player {position}({players[position]}) took')
+                    print(f'\n{Style.BRIGHT}{Fore.GREEN}Player {position}({players[position]}) took')
 
                     takes = 0
 
@@ -398,14 +398,14 @@ def start(l0l, p, position, players):
                     if takes == 2:
                         l0l.tpass()
 
-                        print(f'\n{Fore.GREEN}Player {position}({players[position]}) missed a turn')
+                        print(f'\n{Style.BRIGHT}{Fore.GREEN}Player {position}({players[position]}) missed a turn')
 
                         takes = 0
 
                     else:
                         l0l.take()
 
-                        print(f'\n{Fore.GREEN}Player {position}({players[position]}) took')
+                        print(f'\n{Style.BRIGHT}{Fore.GREEN}Player {position}({players[position]}) took')
 
             me = False
 
@@ -418,19 +418,19 @@ def start(l0l, p, position, players):
 def wait(l0l, game, pr, position=None, players={}):
     banner()
 
-    print(f'{Back.CYAN}Name:', game['name'])
-    print(f'{Back.CYAN}Players:', game['p'])
-    print(f'{Back.CYAN}Bet:', game['bet'])
-    print(f'\n\n{Back.GREEN}Successful entry into the game')
-    print(f'\n{Fore.GREEN}YOU', 'are marked in', f'{Fore.GREEN}GREEN')
-    print(f'\n{Fore.CYAN}Waiting for players... (To leave the room before it starts, press CTRL+C)')
+    print(f'{Style.BRIGHT}{Back.CYAN}Name:', game['name'])
+    print(f'{Style.BRIGHT}{Back.CYAN}Players:', game['p'])
+    print(f'{Style.BRIGHT}{Back.CYAN}Bet:', game['bet'])
+    print(f'\n{Style.BRIGHT}\n{Back.GREEN}Successful entry into the game')
+    print(f'\n{Style.BRIGHT}{Fore.GREEN}YOU', 'are marked in', f'{Fore.GREEN}GREEN')
+    print(f'\n{Style.BRIGHT}{Fore.CYAN}Waiting for players... (To leave the room before it starts, press CTRL+C)')
 
     for i in range(len(players)):
         if i == position:
-            print(f'\n{Fore.GREEN}Player {i}({players[i]}) joined the game')
+            print(f'\n{Style.BRIGHT}{Fore.GREEN}Player {i}({players[i]}) joined the game')
 
         else:
-            print(f'\nPlayer {i}({players[i]}) joined the game')
+            print(f'\n{Style.BRIGHT}Player {i}({players[i]}) joined the game')
 
     players_ready = 0
     x = 3
@@ -445,27 +445,27 @@ def wait(l0l, game, pr, position=None, players={}):
             if data['command'] == 'cp':
                 position = data['id']
 
-                print(f'\n{Fore.GREEN}Player {data["id"]}({data["user"]["name"]}) joined the game')
+                print(f'\n{Style.BRIGHT}{Fore.GREEN}Player {data["id"]}({data["user"]["name"]}) joined the game')
 
                 players[data['id']] = data['user']['name']
 
             if data['command'] == 'ready_on':
                 if data['id'] == position:
-                    print(f'\n{Fore.GREEN}Player {data["id"]} is ready')
+                    print(f'\n{Style.BRIGHT}{Fore.GREEN}Player {data["id"]} is ready')
 
                 else:
-                    print(f'\nPlayer {data["id"]} is ready')
+                    print(f'\n{Style.BRIGHT}Player {data["id"]} is ready')
 
                 players_ready += 1
 
             elif data['command'] == 'p' and len(data) == 3 and data['user'] is None:
-                print(f'\nPlayer {data["id"]} left the game')
+                print(f'\n{Style.BRIGHT}Player {data["id"]} left the game')
 
                 players_ready = 0
 
             elif data['command'] == 'p':
                 try:
-                    print(f'\nPlayer {data["id"]}({data["user"]["name"]}) joined the game')
+                    print(f'\n{Style.BRIGHT}Player {data["id"]}({data["user"]["name"]}) joined the game')
 
                     players[data['id']] = data['user']['name']
                 except:
@@ -481,12 +481,12 @@ def wait(l0l, game, pr, position=None, players={}):
         x = 0
 
     if x == 0:
-        print(f'\n{Fore.CYAN}You left the room')
+        print(f'\n{Style.BRIGHT}{Fore.CYAN}You left the room')
 
         time.sleep(2)
 
     elif x == 1:
-        print(f'\n{Back.RED}Timeout error')
+        print(f'\n{Style.BRIGHT}{Back.RED}Timeout error')
 
         time.sleep(2)
 
@@ -501,9 +501,9 @@ def wait(l0l, game, pr, position=None, players={}):
             data = l0l.listen()
             data = l0l.listen()
 
-            print(f'\n{Back.RED}You surrendered')
+            print(f'\n{Style.BRIGHT}{Back.RED}You surrendered')
 
-            r = input(f'\n{Fore.CYAN}Continue? (Y/n): ')
+            r = input(f'{Style.BRIGHT}\n{Fore.CYAN}Continue? (Y/n): ')
 
         if r:
             wait(l0l, game, pr, position, players)
@@ -512,7 +512,7 @@ def wait(l0l, game, pr, position=None, players={}):
 def get_games(l0l, min_bet, max_bet, pr):
     banner()
 
-    print(f'\n{Fore.CYAN}Games:')
+    print(f'\n{Style.BRIGHT}{Fore.CYAN}Games:')
 
     if not pr:
         l0l.lookup_start(min_bet=min_bet, max_bet=max_bet)
@@ -526,10 +526,10 @@ def get_games(l0l, min_bet, max_bet, pr):
 
     for i in range(len(data['g'])):
         if data['g'][i]['p'] - data['g'][i]['cp'] > 0:
-            print(f'\n{Back.CYAN}{i}.', 'Name:', data['g'][i]['name'])
-            print(f'{Back.GREEN}ID:', data['g'][i]['id'])
-            print(f'{Back.GREEN}Playes:', data['g'][i]['cp'], '/', data['g'][i]['p'])
-            print(f'{Back.GREEN}Bet:', data['g'][i]['bet'])
+            print(f'\n{Style.BRIGHT}{Back.CYAN}{i}.', 'Name:', data['g'][i]['name'])
+            print(f'{Style.BRIGHT}{Back.GREEN}ID:', data['g'][i]['id'])
+            print(f'{Style.BRIGHT}{Back.GREEN}Playes:', data['g'][i]['cp'], '/', data['g'][i]['p'])
+            print(f'{Style.BRIGHT}{Back.GREEN}Bet:', data['g'][i]['bet'])
 
         else:
             data['g'].pop(i)
@@ -553,14 +553,14 @@ def main(l0l, min_bet, max_bet, pr):
             continue
 
         if not games:
-            print(f'\n{Back.CYAN}No games found. Re-check after 5s...')
+            print(f'\n{Style.BRIGHT}{Back.CYAN}No games found. Re-check after 5s...')
 
             time.sleep(5)
 
             continue
 
         try:
-            choice = int(input(f'\n{Fore.CYAN}Game number (100 to refresh): '))
+            choice = int(input(f'{Style.BRIGHT}\n{Fore.CYAN}Game number (100 to refresh): '))
         except ValueError:
             continue
 
@@ -568,7 +568,7 @@ def main(l0l, min_bet, max_bet, pr):
             continue
 
         if pr:
-            password = int(input(f'\n{Fore.CYAN}Password (100 to cancel): '))
+            password = int(input(f'{Style.BRIGHT}\n{Fore.CYAN}Password (100 to cancel): '))
 
             l0l.join_to_game(games[choice]['id'], password)
 
@@ -579,7 +579,7 @@ def main(l0l, min_bet, max_bet, pr):
 
         if data['command'] in ['g', 'gd', 'gl']:
             if pr:
-                print(f'\n{Back.RED}Error: Incorrect password')
+                print(f'\n{Style.BRIGHT}{Back.RED}Error: Incorrect password')
 
                 time.sleep(2)
 
@@ -589,7 +589,7 @@ def main(l0l, min_bet, max_bet, pr):
                 data = l0l.listen()
 
         if data['command'] == 'err':
-            print(f'\n{Back.RED}Error:', data['code'])
+            print(f'\n{Style.BRIGHT}{Back.RED}Error:', data['code'])
 
             time.sleep(2)
 
@@ -603,22 +603,22 @@ def choose_bets(l0l):
     banner()
 
     try:
-        min_bet = int(input(f'\n{Fore.CYAN}Minimum bet [100]: '))
+        min_bet = int(input(f'{Style.BRIGHT}\n{Fore.CYAN}Minimum bet [100]: '))
 
-        print(f'\n{Back.GREEN}Minimum bet:', min_bet)
+        print(f'\n{Style.BRIGHT}{Back.GREEN}Minimum bet:', min_bet)
     except ValueError:
         min_bet = 100
 
-        print(f'\n{Back.GREEN}Minimum bet:', min_bet)
+        print(f'\n{Style.BRIGHT}{Back.GREEN}Minimum bet:', min_bet)
 
     try:
-        max_bet = int(input(f'\n{Fore.CYAN}Maximum bet [1000]: '))
+        max_bet = int(input(f'{Style.BRIGHT}\n{Fore.CYAN}Maximum bet [1000]: '))
 
-        print(f'\n{Back.GREEN}Maximum bet:', max_bet)
+        print(f'\n{Style.BRIGHT}{Back.GREEN}Maximum bet:', max_bet)
     except ValueError:
         max_bet = 1000
 
-        print(f'\n{Back.GREEN}Maximum bet:', max_bet)
+        print(f'\n{Style.BRIGHT}{Back.GREEN}Maximum bet:', max_bet)
 
     time.sleep(1)
     main(l0l, min_bet, max_bet, 0)
@@ -627,18 +627,18 @@ def choose_bets(l0l):
 def choose_game(l0l):
     banner()
 
-    print(f'\n{Back.CYAN}0.', 'Search for public games')
-    print(f'{Back.CYAN}1.', 'Search for public games')
+    print(f'\n{Style.BRIGHT}{Back.CYAN}0.', 'Search for public games')
+    print(f'{Style.BRIGHT}{Back.CYAN}1.', 'Search for public games')
 
     try:
-        pr = int(input(f'\n{Fore.CYAN}Choice [0]: '))
+        pr = int(input(f'{Style.BRIGHT}\n{Fore.CYAN}Choice [0]: '))
 
         if pr < 0 or pr > 1:
             pr = 0
     except ValueError:
         pr = 0
 
-    print(f'\n{Back.GREEN}Choice:', pr)
+    print(f'\n{Style.BRIGHT}{Back.GREEN}Choice:', pr)
 
     time.sleep(1)
 

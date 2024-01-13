@@ -2,7 +2,7 @@ import os
 import random
 import time
 from colorama import Back, Fore, Style, init
-import l0lonline
+import api
 
 init(autoreset=True)
 
@@ -14,7 +14,7 @@ def clear():
 def banner():
     clear()
 
-    print(f'{Style.BRIGHT}{Fore.GREEN}101GOD\n')
+    print(f'{Style.BRIGHT}{Fore.GREEN}Gambler\n')
 
 
 def get_card(card_id):

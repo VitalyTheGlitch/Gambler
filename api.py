@@ -5,7 +5,6 @@ import base64
 import sys
 import json
 
-
 class Client:
     def __init__(self, token=None, debug=False, language='ru', tag=''):
         self.token = None
@@ -24,7 +23,7 @@ class Client:
     def create_connection(self):
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_socket.settimeout(5000)
-        self.client_socket.connect(('49.12.2.202', 10001))
+        self.client_socket.connect(('49.13.56.135', 10001))
         self.client_socket.settimeout(None)
 
         threading.Thread(target=self.receive_messages).start()
@@ -367,7 +366,7 @@ class Client:
             'user_id': user_id
         })
 
-    def lookup_start(self, betMin=100, pr=False, betMax=1000, fast=None, players=None, deck=None, hand=None):
+    def lookup_start(self, min_bet=100, pr=False, max_bet=1000, fast=None, players=None, deck=None, hand=None):
         if hand is None:
             hand = [4, 5, 6]
 
@@ -383,8 +382,8 @@ class Client:
         if not pr:
             self.send_server({
                 'command': 'lookup_start',
-                'betMin': betMin,
-                'betMax': betMax,
+                'betMin': min_bet,
+                'betMax': max_bet,
                 'pr': [False],
                 'fast': fast,
                 'players': players,

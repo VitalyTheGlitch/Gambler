@@ -1,8 +1,9 @@
 import os
 import random
 import time
-from colorama import Back, Fore, Style, init
 import api
+from colorama import Back, Fore, Style, init
+from dotenv import dotenv_values
 
 init(autoreset=True)
 
@@ -170,7 +171,7 @@ def start(l0l, p, position, players):
 
         elif data['command'] == 't':
             if data['id'] == position:
-                print(f'\n{Style.BRIGHT}{Fore.GREEN}Player {data["id"]}({players[data["id"]]}) played the {get_card(data["c"])}')
+                print(f'\n{Style.BRIGHT}{Fore.GREEN}Player {data["id"]} ({players[data["id"]]}) played {get_card(data["c"])}')
 
                 if start:
                     if data['c'] in [40, 41, 42, 43]:
@@ -184,7 +185,7 @@ def start(l0l, p, position, players):
                     pass
 
             else:
-                print(f'\n{Style.BRIGHT}Player {data["id"]}({players[data["id"]]}) played the {get_card(data["c"])}')
+                print(f'\n{Style.BRIGHT}Player {data["id"]} ({players[data["id"]]}) played {get_card(data["c"])}')
 
             start = False
 
@@ -361,7 +362,7 @@ def start(l0l, p, position, players):
                 elif available[z] in [24, 25, 26, 27]:
                     eight_suit = get_card(available[z])[0]
 
-                print(f'\n{Style.BRIGHT}{Fore.GREEN}Player {position}({players[position]}) played the {get_card(available[z])}')
+                print(f'\n{Style.BRIGHT}{Fore.GREEN}Player {position} ({players[position]}) played {get_card(available[z])}')
 
                 try:
                     cards.remove(get_card(available[z]))
@@ -378,19 +379,19 @@ def start(l0l, p, position, players):
                     if takes == 4:
                         l0l.tpass()
 
-                        print(f'\n{Style.BRIGHT}{Fore.GREEN}Player {position}({players[position]}) missed a turn')
+                        print(f'\n{Style.BRIGHT}{Fore.GREEN}Player {position} ({players[position]}) skipped their turn')
 
                         takes = 0
 
                     else:
                         l0l.take()
 
-                        print(f'\n{Style.BRIGHT}{Fore.GREEN}Player {position}({players[position]}) took')
+                        print(f'\n{Style.BRIGHT}{Fore.GREEN}Player {position} ({players[position]}) took a card')
 
                 elif six_or_seven:
                     l0l.take()
 
-                    print(f'\n{Style.BRIGHT}{Fore.GREEN}Player {position}({players[position]}) took')
+                    print(f'\n{Style.BRIGHT}{Fore.GREEN}Player {position} ({players[position]}) took a card')
 
                     takes = 0
 
@@ -398,14 +399,14 @@ def start(l0l, p, position, players):
                     if takes == 2:
                         l0l.tpass()
 
-                        print(f'\n{Style.BRIGHT}{Fore.GREEN}Player {position}({players[position]}) missed a turn')
+                        print(f'\n{Style.BRIGHT}{Fore.GREEN}Player {position} ({players[position]}) skipped their turn')
 
                         takes = 0
 
                     else:
                         l0l.take()
 
-                        print(f'\n{Style.BRIGHT}{Fore.GREEN}Player {position}({players[position]}) took')
+                        print(f'\n{Style.BRIGHT}{Fore.GREEN}Player {position} ({players[position]}) took a card')
 
             me = False
 
@@ -421,7 +422,7 @@ def wait(l0l, game, pr, position=None, players={}):
     print(f'{Style.BRIGHT}{Back.CYAN}Name:', game['name'])
     print(f'{Style.BRIGHT}{Back.CYAN}Players:', game['p'])
     print(f'{Style.BRIGHT}{Back.CYAN}Bet:', game['bet'])
-    print(f'\n{Style.BRIGHT}\n{Back.GREEN}Successful entry into the game')
+    print(f'\n{Style.BRIGHT}{Back.GREEN}Successful entry into the game')
     print(f'\n{Style.BRIGHT}{Fore.GREEN}YOU', 'are marked in', f'{Fore.GREEN}GREEN')
     print(f'\n{Style.BRIGHT}{Fore.CYAN}Waiting for players... (To leave the room before it starts, press CTRL+C)')
 
@@ -445,7 +446,7 @@ def wait(l0l, game, pr, position=None, players={}):
             if data['command'] == 'cp':
                 position = data['id']
 
-                print(f'\n{Style.BRIGHT}{Fore.GREEN}Player {data["id"]}({data["user"]["name"]}) joined the game')
+                print(f'\n{Style.BRIGHT}{Fore.GREEN}Player {data["id"]} ({data["user"]["name"]}) joined the game')
 
                 players[data['id']] = data['user']['name']
 
@@ -465,7 +466,7 @@ def wait(l0l, game, pr, position=None, players={}):
 
             elif data['command'] == 'p':
                 try:
-                    print(f'\n{Style.BRIGHT}Player {data["id"]}({data["user"]["name"]}) joined the game')
+                    print(f'\n{Style.BRIGHT}Player {data["id"]} ({data["user"]["name"]}) joined the game')
 
                     players[data['id']] = data['user']['name']
                 except:
@@ -512,7 +513,7 @@ def wait(l0l, game, pr, position=None, players={}):
 def get_games(l0l, min_bet, max_bet, pr):
     banner()
 
-    print(f'\n{Style.BRIGHT}{Fore.CYAN}Games:')
+    print(f'{Style.BRIGHT}{Fore.CYAN}Games:')
 
     if not pr:
         l0l.lookup_start(min_bet=min_bet, max_bet=max_bet)
@@ -568,7 +569,10 @@ def main(l0l, min_bet, max_bet, pr):
             continue
 
         if pr:
-            password = int(input(f'{Style.BRIGHT}\n{Fore.CYAN}Password (100 to cancel): '))
+            try:
+                password = int(input(f'{Style.BRIGHT}\n{Fore.CYAN}Password (100 to cancel): '))
+            except ValueError:
+                password = 1111
 
             l0l.join_to_game(games[choice]['id'], password)
 
@@ -603,7 +607,7 @@ def choose_bets(l0l):
     banner()
 
     try:
-        min_bet = int(input(f'{Style.BRIGHT}\n{Fore.CYAN}Minimum bet [100]: '))
+        min_bet = int(input(f'{Style.BRIGHT}{Fore.CYAN}Minimum bet [100]: '))
 
         print(f'\n{Style.BRIGHT}{Back.GREEN}Minimum bet:', min_bet)
     except ValueError:
@@ -627,8 +631,8 @@ def choose_bets(l0l):
 def choose_game(l0l):
     banner()
 
-    print(f'\n{Style.BRIGHT}{Back.CYAN}0.', 'Search for public games')
-    print(f'{Style.BRIGHT}{Back.CYAN}1.', 'Search for public games')
+    print(f'{Style.BRIGHT}{Back.CYAN}0.', 'Search for public games')
+    print(f'{Style.BRIGHT}{Back.CYAN}1.', 'Search for private games')
 
     try:
         pr = int(input(f'{Style.BRIGHT}\n{Fore.CYAN}Choice [0]: '))
@@ -651,6 +655,15 @@ def choose_game(l0l):
     choose_game(l0l)
 
 
-l0l = l0lonline.Client('$2a$06$6fy8UJ1/5qDA1JY4pmbWnu')
+config = dotenv_values('.env')
 
-choose_game(l0l)
+try:
+    auth_token = config['AUTH_TOKEN']
+
+    l0l = api.Client(auth_token)
+
+    choose_game(l0l)
+except KeyError:
+    print(f'\n{Style.BRIGHT}{Back.RED}Auth token not found!')
+
+    os.abort()
